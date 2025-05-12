@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{fragments/layout}"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+  <head>
+    <title>Login</title>
+  </head>
+  <body>
+    <section class="login-page" layout:fragment="content">
+      <form th:action="@{/login}" method="post">
+        <th:block th:replace="~{fragments/utility-fragments :: labeled-input ('username', 'text', 'Username', false)}"></th:block>
+        <th:block th:replace="~{fragments/utility-fragments :: labeled-input ('password', 'password', 'Password', false)}"></th:block>
+
+        <th:block th:replace="~{fragments/utility-fragments :: form-submit ('Login')}"></th:block>
+      </form>
+
+      <div class="login-error" th:if="${param.error}">
+        Invalid credentials!
+      </div>
+    </section>
+  </body>
+</html>

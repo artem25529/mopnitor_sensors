@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+  <body>
+    <div class="labeled-input-wrapper" th:fragment="labeled-input (field, type, label, includeErrors)">
+      <div class="labeled-input">
+        <label th:for="${field}" th:text="${label}"></label>
+        <input th:type="${type}" th:id="${field}" th:name="${field}">
+      </div>
+      <div th:if="${includeErrors}" class="input-errors">
+        <ul th:if="${#fields.hasErrors(field)}">
+          <li th:each="error : ${#fields.errors(field)}" th:text="${error}"></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="form-submit" th:fragment="form-submit (label)">
+      <button type="submit" th:text="${label}"></button>
+    </div>
+  </body>
+</html>
