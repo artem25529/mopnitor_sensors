@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{fragments/layout}"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+  <head>
+    <title>Create Sensor</title>
+    <link rel="stylesheet" th:href="@{/styles/new-sensor.css}">
+  </head>
+  <body>
+    <section class="new-sensor-page" layout:fragment="content">
+      <th:block th:replace="~{ :: sensor-form (false)}"></th:block>
+    </section>
+
+    <th:block th:fragment="sensor-form (isUpdate)">
+      <h1 th:text="${(!isUpdate ? 'Create' : 'Update') + ' Sensor'}"></h1>
+
+      <form class="new-sensor-form" th:method="${isUpdate ? 'PATCH' : 'POST'}"
+            th:action="@{${isUpdate ? ('/sensors/' + sensor.id) : '/sensors'}}" th:object="${sensor}">
+
+        <th:block th:if="${isUpdate}">
+          <input type="hidden" th:field="*{id}">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        </th:block>
+
+        <div class="field-wrapper">
+          <label th:for="*{name}">Name</label>
+          <input type="text" th:field="*{name}">
+        </div>
+        <div class="field-errors" th:errors="*{name}"></div>
+
+        <div class="field-wrapper">
+          <label th:for="*{model}">Model</label>
+          <input type="text" th:field="*{model}">
+        </div>
+        <div class="field-errors" th:errors="*{model}"></div>
+
+        <div class="field-wrapper">
+          <label th:for="*{range.from}">Range from</label>
+          <input type="number" th:field="*{range.from}">
+        </div>
+        <div class="field-errors" th:errors="*{range.from}"></div>
+
+        <div class="field-wrapper">
+          <label th:for="*{range.to}">Range to</label>
+          <input type="number" th:field="*{range.to}">
+        </div>
+        <div class="field-errors">
+          <th:block th:errors="*{range}"></th:block>
+          <th:block th:errors="*{range.to}"></th:block>
+        </div>
+
+        <div class="field-wrapper">
+          <label th:for="*{type.id}">Type</label>
+          <select th:field="*{type.id}">
+            <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"
+                    th:selected="${type.id eq sensor.type.id}"></option>
+          </select>
+        </div>
+
+        <div class="field-wrapper">
+          <label th:for="*{unit.id}">Unit</label>
+          <select th:field="*{unit.id}">
+            <option th:value="${null}" th:selected="${sensor.unit.id eq null}">N/A</option>
+
+            <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.unit}"
+                    th:selected="${unit.id eq sensor.unit.id}"></option>
+          </select>
+        </div>
+
+        <div class="field-wrapper">
+          <label th:for="*{location}">Location</label>
+          <input type="text" th:field="*{location}">
+        </div>
+        <div class="field-errors" th:errors="*{location}"></div>
+
+        <div class="field-wrapper">
+          <label th:for="*{description}">Description</label>
+          <input type="text" th:field="*{description}">
+        </div>
+        <div class="field-errors" th:errors="*{description}"></div>
+
+        <button class="btn new-sensor-submit-btn" type="submit" th:text="${isUpdate ? 'Update' : 'Create'}"></button>
+
+      </form>
+    </th:block>
+  </body>
+</html>

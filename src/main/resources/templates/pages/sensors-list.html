@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{fragments/layout}"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+  <head>
+    <title>Sensors</title>
+    <link rel="stylesheet" th:href="@{/styles/sensors-list.css}">
+    <script th:src="@{/scripts/sensors-list.js}" defer></script>
+  </head>
+  <body>
+    <section class="sensors-list-page" layout:fragment="content">
+      <th:block th:if="${msg != null && success == true}">
+        <div class="msg success" th:text="${msg}"></div>
+      </th:block>
+
+      <div class="sensors-not-found" th:if="${sensorsListDto.sensors.isEmpty()}">
+        Sensors were not found.
+      </div>
+
+      <th:block th:if="${!sensorsListDto.sensors.isEmpty()}">
+        <div class="sensors-list-wrapper" sec:authorize="!hasAuthority('Administrator')">
+          <table>
+            <thead th:fragment="thead">
+              <tr>
+                <th>Name</th>
+                <th>Model</th>
+                <th>Range(from - to)</th>
+                <th>Type</th>
+                <th>Unit</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th></th>
+
+                <th:block sec:authorize="hasAuthority('Administrator')">
+                  <th></th>
+                </th:block>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="sensor : ${sensorsListDto.sensors}">
+                <td th:text="${sensor.name}"></td>
+                <td th:text="${sensor.model}"></td>
+                <td th:text="${sensor.range.from} + ' - ' + ${sensor.range.to}"></td>
+                <td th:text="${sensor.type.type}"></td>
+                <td th:text="${sensor?.unit?.unit} ?: 'N/A'"></td>
+                <td th:text="${sensor.location} ?: 'N/A'"></td>
+                <td th:text="${sensor.description} ?: 'N/A'"></td>
+
+                <td>
+                  <a class="btn" th:href="@{/sensors/{id}(id=${sensor.id})}">Details</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <form id="sensors-form" th:method="PATCH" th:object="${sensorsListDto}"
+              class="sensors-list-wrapper sensors-form"
+              sec:authorize="hasAuthority('Administrator')">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+          <table>
+            <th:block th:replace="~{ :: thead}"></th:block>
+
+            <tbody>
+              <tr th:each="sensor, itemStat : *{sensors}" th:attr="data-id=${sensor.id}">
+                <input type="hidden" th:field="*{sensors[__${itemStat.index}__].id}">
+
+                <td>
+                  <input type="text" th:field="*{sensors[__${itemStat.index}__].name}">
+                  <div class="field-errors" th:errors="*{sensors[__${itemStat.index}__].name}"></div>
+                </td>
+                <td>
+                  <input type="text" th:field="*{sensors[__${itemStat.index}__].model}">
+                  <div class="field-errors" th:errors="*{sensors[__${itemStat.index}__].model}"></div>
+                </td>
+                <td class="range-cell"
+                    th:with="fromErrors=${#fields.errors('sensors[' + itemStat.index + '].range.from')},
+                    toErrors=${#fields.errors('sensors[' + itemStat.index + '].range.to')}">
+                  <div class="range-values">
+                    <input type="number" th:field="*{sensors[__${itemStat.index}__].range.from}">
+                    <span>-</span>
+                    <input type="number" th:field="*{sensors[__${itemStat.index}__].range.to}">
+                  </div>
+                  <div class="field-errors" th:if="${!fromErrors.isEmpty() || !toErrors.isEmpty()
+                  || #fields.hasErrors('sensors[' + itemStat.index + '].range')}">
+                    <th:block th:if="${!fromErrors.isEmpty()}"
+                              th:errors="*{sensors[__${itemStat.index}__].range.from}">
+                    </th:block>
+                    <th:block th:if="${fromErrors.isEmpty() and !toErrors.isEmpty()}"
+                              th:errors="*{sensors[__${itemStat.index}__].range.to}">
+                    </th:block>
+                    <th:block th:errors="*{sensors[__${itemStat.index}__].range}">
+                    </th:block>
+                  </div>
+                </td>
+                <td class="select-cell">
+                  <select th:field="*{sensors[__${itemStat.index}__].type.id}">
+                    <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}"
+                            th:selected="${type.id eq sensor.type.id}"></option>
+                  </select>
+                </td>
+                <td class="select-cell">
+                  <select th:field="*{sensors[__${itemStat.index}__].unit.id}">
+                    <option th:value="${null}" th:selected="${sensor.unit.id eq null}">N/A</option>
+
+                    <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.unit}"
+                            th:selected="${unit.id eq sensor.unit.id}"></option>
+                  </select>
+                </td>
+                <td>
+                  <input type="text" th:field="*{sensors[__${itemStat.index}__].location}">
+                  <div class="field-errors" th:errors="*{sensors[__${itemStat.index}__].location}"></div>
+                </td>
+                <td>
+                  <input type="text" th:field="*{sensors[__${itemStat.index}__].description}">
+                  <div class="field-errors" th:errors="*{sensors[__${itemStat.index}__].description}"></div>
+                </td>
+
+                <td>
+                  <a class="btn" th:href="@{/sensors/{id}(id=${sensor.id})}">Details</a>
+                </td>
+                <td>
+                  <button onclick="handleSensorDelete()" form="delete-sensor-form" class="btn btn-danger" type="submit">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+
+        <div class="controls-wrapper" sec:authorize="hasAuthority('Administrator')">
+          <button class="btn btn-warn" type="submit" form="sensors-form">Update</button>
+          <a class="btn btn-success" th:href="@{/sensors/new}">Add new sensor</a>
+        </div>
+      </th:block>
+
+      <form id="delete-sensor-form" th:method="DELETE" action="/sensors/">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+      </form>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{fragments/layout}"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+  <head>
+    <title>Sensor Details</title>
+    <link rel="stylesheet" th:href="@{/styles/new-sensor.css}">
+    <link rel="stylesheet" th:href="@{/styles/sensor-details.css}">
+  </head>
+  <body>
+    <section class="sensor-details-page" layout:fragment="content">
+      <div sec:authorize="!hasAuthority('Administrator')" class="sensor-details-wrapper">
+        <div>
+          <div>Name</div>
+          <div th:text="${sensor.name}"></div>
+        </div>
+        <div>
+          <div>Model</div>
+          <div th:text="${sensor.model}"></div>
+        </div>
+        <div>
+          <div>Range</div>
+          <div th:text="${sensor.range.from} + ' - ' + ${sensor.range.to}"></div>
+        </div>
+        <div>
+          <div>Type</div>
+          <div th:text="${sensor.type.type}"></div>
+        </div>
+        <div>
+          <div>Unit</div>
+          <div th:text="${sensor?.unit?.unit} ?: 'N/A'"></div>
+        </div>
+        <div>
+          <div>Location</div>
+          <div th:text="${sensor.location} ?: 'N/A'"></div>
+        </div>
+        <div>
+          <div>Description</div>
+          <div th:text="${sensor.description} ?: 'N/A'"></div>
+        </div>
+      </div>
+
+      <th:block sec:authorize="hasAuthority('Administrator')" th:replace="~{pages/new-sensor :: sensor-form (true)}"></th:block>
+    </section>
+  </body>
+</html>
