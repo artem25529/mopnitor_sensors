@@ -29,6 +29,11 @@
                 <th>Unit</th>
                 <th>Location</th>
                 <th>Description</th>
+                <th></th>
+
+                <th:block sec:authorize="hasAuthority('Administrator')">
+                  <th></th>
+                </th:block>
               </tr>
             </thead>
             <tbody>
@@ -37,9 +42,13 @@
                 <td th:text="${sensor.model} ?: 'N/A'"></td>
                 <td th:text="${sensor.range.from} + ' - ' + ${sensor.range.to}"></td>
                 <td th:text="${sensor.type.type}"></td>
-                <td th:text="${sensor.unit?.unit} ?: 'N/A'"></td>
+                <td th:text="${sensor?.unit?.unit} ?: 'N/A'"></td>
                 <td th:text="${sensor.location} ?: 'N/A'"></td>
                 <td th:text="${sensor.description} ?: 'N/A'"></td>
+
+                <td>
+                  <a th:href="@{/sensors/{id}(id=${sensor.id})}">Details</a>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -98,6 +107,18 @@
                   <input type="text" th:field="*{sensors[__${itemStat.index}__].description}">
                   <div th:errors="*{sensors[__${itemStat.index}__].description}"></div>
                 </td>
+
+                <td>
+                  <a th:href="@{/sensors/{id}(id=${sensor.id})}">Details</a>
+                </td>
+
+                <th:block sec:authorize="hasAuthority('Administrator')">
+                  <td>
+                    <form th:method="DELETE" th:action="@{/sensors/{id}(id=${sensor.id})}">
+                      <button type="submit">Delete</button>
+                    </form>
+                  </td>
+                </th:block>
               </tr>
             </tbody>
           </table>
@@ -107,6 +128,10 @@
           </div>
         </form>
       </th:block>
+
+      <div class="create-sensor-wrapper" sec:authorize="hasAuthority('Administrator')">
+        <a th:href="@{/sensors/new}">Add new sensor</a>
+      </div>
     </section>
   </body>
 </html>

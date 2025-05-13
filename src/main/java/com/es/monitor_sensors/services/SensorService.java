@@ -5,7 +5,6 @@ import com.es.monitor_sensors.models.Sensor;
 import com.es.monitor_sensors.repositories.SensorRepository;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,6 @@ public class SensorService {
     @Autowired
     private SensorRepository sensorRepository;
 
-    @Cacheable(cacheNames = "sensors")
     public List<Sensor> getAll() {
         return Lists.newArrayList(sensorRepository.findAll());
     }
@@ -32,16 +30,26 @@ public class SensorService {
         return optionalSensor.get();
     }
 
+    @Transactional
     public Long saveOrUpdate(final Sensor sensor) {
+        setUnitToNullIfUnspecified(sensor);
         return sensorRepository.save(sensor).getId();
     }
 
     @Transactional
-    public List<Sensor> saveOrUpdateAll(final List<Sensor> sensors) {
-        return sensorRepository.saveAllAndFlush(sensors);
+    public void saveOrUpdateAll(final List<Sensor> sensors) {
+        sensors.forEach(this::setUnitToNullIfUnspecified);
+        sensorRepository.saveAllAndFlush(sensors);
     }
 
-    public void deleteById(Long id) {
+    @Transactional
+    public void deleteById(final Long id) {
         sensorRepository.deleteById(id);
+    }
+
+    private void setUnitToNullIfUnspecified(final Sensor sensor) {
+        if (sensor.getUnit().getId() == null) {
+            sensor.setUnit(null);
+        }
     }
 }

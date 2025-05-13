@@ -7,8 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Setter
@@ -29,17 +27,15 @@ public class Sensor extends BaseEntity {
     @Valid
     @Embedded
     @ValidRange
-    private Range range;
+    private Range range = new Range();
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "type_id")
-    @Cascade(value = {CascadeType.PERSIST, CascadeType.MERGE})
     private Type type = new Type();
 
     @ManyToOne
     @JoinColumn(name = "unit_id")
-    @Cascade(value = {CascadeType.PERSIST, CascadeType.MERGE})
     private Unit unit = new Unit();
 
     @Size(max = 40)

@@ -1,29 +1,22 @@
 package com.es.monitor_sensors.controllers;
 
 import com.es.monitor_sensors.dtos.SensorsListDto;
+import com.es.monitor_sensors.models.Sensor;
 import com.es.monitor_sensors.services.SensorService;
 import com.es.monitor_sensors.services.TypeService;
 import com.es.monitor_sensors.services.UnitService;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.SmartValidator;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Slf4j
 @Controller
 @RequestMapping("/sensors")
 public class SensorController extends BaseController {
-    @Autowired
-    private SmartValidator smartValidator;
-
     @Autowired
     private SensorService sensorService;
 
@@ -41,9 +34,37 @@ public class SensorController extends BaseController {
 
     @GetMapping
     public String sensors(final Model model) {
-        log.debug("logging");
         model.addAttribute("sensorsListDto", new SensorsListDto(sensorService.getAll()));
         return "pages/sensors-list";
+    }
+
+    @GetMapping("/{id}")
+    public String sensors(@PathVariable final Long id, final Model model) {
+        model.addAttribute("sensor", sensorService.getById(id));
+        return "pages/sensor-details";
+    }
+
+    @GetMapping("/new")
+    @PreAuthorize("hasAuthority('Administrator')")
+    public String newSensor(final Model model) {
+        model.addAttribute("sensor", new Sensor());
+        return "pages/new-sensor";
+    }
+
+    @PostMapping
+    public String createUser(@Valid @ModelAttribute final Sensor sensor,
+                             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "pages/new-sensor";
+        }
+
+        final Long id = sensorService.saveOrUpdate(sensor);
+
+        redirectAttributes.addFlashAttribute("success", true);
+        redirectAttributes.addFlashAttribute("msg", "Sensor with id: " + id +
+                " was created successfully!");
+
+        return REDIRECT_PREFIX + "/";
     }
 
     @PatchMapping
@@ -56,5 +77,12 @@ public class SensorController extends BaseController {
         sensorService.saveOrUpdateAll(sensorsListDto.getSensors());
         redirectAttributes.addFlashAttribute("msg", "Sensor(s) updated successfully!");
         return REDIRECT_PREFIX + "/sensors?success";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable final Long id) {
+        sensorService.deleteById(id);
+
+        return REDIRECT_PREFIX + "/sensors";
     }
 }
