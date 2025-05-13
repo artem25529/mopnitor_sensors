@@ -24,7 +24,7 @@ INSERT INTO units (id, unit)
 VALUES (1, 'bar'),
        (2, 'voltage'),
        (3, '°С'),
-       (4, '°%');
+       (4, '%');
 
 INSERT INTO sensors (name, model, from_val, to_val, type_id, unit_id, location, description)
 VALUES ('Barometer', 'ac-23', 22, 45, 1, 2, 'kitchen', "it's a description about this sensor"),

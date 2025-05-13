@@ -7,14 +7,21 @@
   </head>
   <body>
     <section class="login-page" layout:fragment="content">
-      <form th:action="@{/login}" method="post">
-        <th:block th:replace="~{fragments/utility-fragments :: labeled-input ('username', 'text', 'Username', false)}"></th:block>
-        <th:block th:replace="~{fragments/utility-fragments :: labeled-input ('password', 'password', 'Password', false)}"></th:block>
-
-        <th:block th:replace="~{fragments/utility-fragments :: form-submit ('Login')}"></th:block>
+      <form class="login-form" th:action="@{/login}" method="post">
+        <div class="form-field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username">
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password">
+        </div>
+        <div class="form-submit">
+          <button type="submit">Login</button>
+        </div>
       </form>
 
-      <div class="login-error" th:if="${param.error}">
+      <div class="msg error" th:if="${param.error}">
         Invalid credentials!
       </div>
     </section>
