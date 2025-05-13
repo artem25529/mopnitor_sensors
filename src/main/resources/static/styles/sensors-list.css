@@ -1,0 +1,18 @@
+.sensors-list-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  .sensors-list-wrapper {
+    td, th {
+      max-width: 13rem;
+    }
+  }
+
+  .controls-wrapper {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+}

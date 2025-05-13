@@ -13,11 +13,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Range {
-    @Positive
     @Column(name = "from_val")
     private int from;
 
-    @Positive
     @Column(name = "to_val")
     private int to;
 }

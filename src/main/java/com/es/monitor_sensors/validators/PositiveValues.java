@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
-@Constraint(validatedBy = RangeValidator.class)
-public @interface ValidRange {
-    String message() default "{range.invalid}";
+@Constraint(validatedBy = RangeValuesValidator.class)
+public @interface PositiveValues {
+    String message() default "{numbers.invalid}";
 
     Class<?>[] groups() default {};
 

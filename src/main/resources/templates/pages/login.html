@@ -4,23 +4,24 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
   <head>
     <title>Login</title>
+    <link rel="stylesheet" th:href="@{/styles/login.css}">
   </head>
   <body>
     <section class="login-page" layout:fragment="content">
       <form class="login-form" th:action="@{/login}" method="post">
-        <div class="form-field">
+        <div class="login-form__field">
           <label for="username">Username</label>
           <input type="text" id="username" name="username">
         </div>
-        <div class="form-field">
+        <div class="login-form__field">
           <label for="password">Password</label>
           <input type="password" id="password" name="password">
         </div>
-        <div class="form-field">
+        <div class="login-form__field">
           <label for="remember-me">Remember Me</label>
           <input type="checkbox" id="remember-me" name="remember-me">
         </div>
-        <div class="form-submit">
+        <div class="login-form-submit">
           <button type="submit">Login</button>
         </div>
       </form>

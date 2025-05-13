@@ -1,5 +1,6 @@
 package com.es.monitor_sensors.models;
 
+import com.es.monitor_sensors.validators.PositiveValues;
 import com.es.monitor_sensors.validators.ValidRange;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -24,9 +25,9 @@ public class Sensor extends BaseEntity {
     @Size(max = 15)
     private String model;
 
-    @Valid
     @Embedded
     @ValidRange
+    @PositiveValues
     private Range range = new Range();
 
     @NotNull

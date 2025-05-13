@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class RangeValidator implements ConstraintValidator<ValidRange, Range> {
     @Override
-    public boolean isValid(Range o, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(final Range o, final ConstraintValidatorContext constraintValidatorContext) {
         return o.getTo() > o.getFrom();
     }
 }

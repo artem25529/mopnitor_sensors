@@ -2,6 +2,7 @@ package com.es.monitor_sensors.services;
 
 import com.es.monitor_sensors.exceptions.InvalidIdException;
 import com.es.monitor_sensors.models.Sensor;
+import com.es.monitor_sensors.models.Unit;
 import com.es.monitor_sensors.repositories.SensorRepository;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,12 @@ public class SensorService {
             throw new InvalidIdException("Sensor not found with id: " + id);
         }
 
-        return optionalSensor.get();
+        final Sensor sensor = optionalSensor.get();
+        if (sensor.getUnit() == null) {
+            sensor.setUnit(new Unit());
+        }
+
+        return sensor;
     }
 
     @Transactional
@@ -37,9 +43,9 @@ public class SensorService {
     }
 
     @Transactional
-    public void saveOrUpdateAll(final List<Sensor> sensors) {
+    public List<Sensor> saveOrUpdateAll(final List<Sensor> sensors) {
         sensors.forEach(this::setUnitToNullIfUnspecified);
-        sensorRepository.saveAllAndFlush(sensors);
+        return sensorRepository.saveAllAndFlush(sensors);
     }
 
     @Transactional

@@ -3,11 +3,17 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
   <body>
     <header class="page-header">
-      <h1>Page Header</h1>
+      <th:block sec:authorize="!isAuthenticated()">
+        <a class="btn" th:href="@{/login}">Login</a>
+        <a class="btn btn-success" th:href="@{/signup}">Signup</a>
+      </th:block>
 
-      <form class="logout-form" sec:authorize="isAuthenticated()" method="post" th:action="@{/logout}">
-        <button type="submit">logout</button>
-      </form>
+      <th:block sec:authorize="isAuthenticated()">
+        <div class="username-container" sec:authentication="principal.username"></div>
+        <form class="logout-form" sec:authorize="isAuthenticated()" method="post" th:action="@{/logout}">
+          <button class="btn" type="submit">logout</button>
+        </form>
+      </th:block>
     </header>
   </body>
 </html>

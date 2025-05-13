@@ -1,0 +1,28 @@
+.new-sensor-form {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: auto auto;
+  place-content: center;
+  place-items: center;
+
+  .field-wrapper {
+    align-items: center;
+    justify-items: start;
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  .field-errors {
+    position: relative;
+    max-width: unset;
+    grid-column: span 2;
+  }
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  font-size: 1.3rem;
+}

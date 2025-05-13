@@ -1,0 +1,169 @@
+:root {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  font-size: 16px;
+  color: #2f2f2f;
+
+  color-scheme: light;
+  accent-color: var(--color-main);
+
+  --color-main: #c6daf9;
+  --color-main-light: #d6e6ff;
+  --color-main-dark: #84b0df;
+
+  --color-danger: rgb(240, 136, 136);
+  --color-success: rgb(156, 239, 156);
+  --color-warn: rgb(249, 227, 107);
+}
+
+* {
+  word-break: break-word;
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  box-sizing: border-box;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: currentColor;
+}
+
+select {
+  appearance: auto;
+}
+
+input {
+  border: 1px solid rgb(215, 215, 215);
+
+  &[type="text"] {
+    width: 10rem;
+    border-radius: 0.4rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  &[type="number"] {
+    padding: 0.25rem;
+    width: 3.2rem;
+    text-align: right;
+    border-radius: 0.2rem;
+  }
+}
+
+select {
+  padding: 0.2rem;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+thead {
+  border-bottom: 1px solid;
+}
+
+th,
+td {
+  border: none;
+  padding: 0.3rem;
+}
+
+th {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  padding: 0.3rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  .username-container {
+    font-weight: 600;
+    font-size: 1.2em;
+  }
+}
+
+.page-main {
+  flex-grow: 1;
+}
+
+.btn {
+  display: inline-block;
+  border: none;
+  background-color: var(--color-main);
+  border-radius: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  font-weight: 550;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.btn-danger {
+  background-color: var(--color-danger);
+}
+
+.btn-success {
+  background-color: var(--color-success);
+}
+
+.btn-warn {
+  background-color: var(--color-warn);
+}
+
+.success {
+  color: var(--color-success);
+}
+
+.error {
+  color: var(--color-danger);
+}
+
+:where(:focus, :focus-visible):not(select) {
+  outline: 1px solid var(--color-main-dark);
+}
+
+.range-cell {
+  .range-values {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+
+    span {
+      font-weight: 800;
+    }
+  }
+}
+
+.field-errors {
+  color: var(--color-danger);
+  height: 1lh;
+  overflow: hidden;
+  white-space: wrap;
+  mask-image: linear-gradient(to right, black 60%, transparent);
+
+  &:hover {
+    overflow: visible;
+    mask-image: none;
+  }
+}
